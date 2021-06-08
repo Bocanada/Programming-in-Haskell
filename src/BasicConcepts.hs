@@ -1,4 +1,4 @@
-module BasicConcepts where
+module BasicConcepts (factors) where
 
 import Data.Char (chr, isLower, ord)
 
@@ -10,7 +10,7 @@ seqn (act : acts) = do
   return (x : xs)
 seqn [] = return []
 
--- QickSort
+-- QuickSort
 qSort :: Ord a => [a] -> [a]
 qSort [] = []
 qSort (x : xs) = qSort smallest ++ [x] ++ qSort biggest
