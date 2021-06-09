@@ -1,6 +1,6 @@
 module BasicConcepts (factors) where
 
-import Data.Char (chr, isLower, ord)
+import Data.Char (chr, isAsciiLower, isLower, ord)
 
 -- Sequencing
 seqn :: Monad m => [m a] -> m [a]
@@ -13,18 +13,18 @@ seqn [] = return []
 -- QuickSort
 qSort :: Ord a => [a] -> [a]
 qSort [] = []
-qSort (x : xs) = qSort smallest ++ [x] ++ qSort biggest
+qSort (x : xs) = qSort smaller ++ [x] ++ qSort biggest
   where
-    smallest = [n | n <- xs, n <= x]
+    smaller = [n | n <- xs, n <= x]
     biggest = [n | n <- xs, n > x]
 
 -- Reverse sort
 rSort :: Ord a => [a] -> [a]
 rSort [] = []
-rSort (x : xs) = rSort biggest ++ [x] ++ rSort smallest
+rSort (x : xs) = rSort biggest ++ [x] ++ rSort smaller
   where
     biggest = [n | n <- xs, n > x]
-    smallest = [i | i <- xs, i <= x]
+    smaller = [i | i <- xs, i <= x]
 
 luhnDouble :: Int -> Int
 luhnDouble n = if result > 9 then result - 9 else result
@@ -69,7 +69,7 @@ positions x xs = [i | (x', i) <- zip xs [0 ..], x == x'] -- [0..] is an infinite
 
 -- | Counts the amount of lowercase letters
 lowers :: String -> Int
-lowers xs = length [x | x <- xs, x >= 'a' && x <= 'z']
+lowers xs = length [x | x <- xs, isAsciiLower x]
 
 -- | Counts the occurences of c in cs
 count :: Char -> String -> Int

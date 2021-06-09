@@ -1,6 +1,6 @@
 module BasicConceptsExercises where
 
-import BasicConcepts (factors)
+import           BasicConcepts (factors)
 
 -- | Returns a coordinate grid of m x n.
 grid :: Int -> Int -> [(Int, Int)]
@@ -15,7 +15,11 @@ myreplicate n x = [x | _ <- [1 .. n]]
 
 -- | Returns all the pairs that satisfy the condition x^2 + y^2 = z^2 from 1..n
 pyths :: Int -> [(Int, Int, Int)]
-pyths n = [(x, y, z) | x <- [1 .. n], y <- [1 .. n], z <- [1 .. n], (x ^ 2 + y ^ 2) == z ^ 2]
+pyths n = [(x, y, z)
+          | x <- [1 .. n]
+          , y <- [1 .. n]
+          , z <- [1 .. n]
+          , (x ^ 2 + y ^ 2) == z ^ 2]
 
 -- | Returns all perfect numbers up to n
 perfects :: Int -> [Int]
