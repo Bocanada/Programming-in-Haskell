@@ -1,8 +1,11 @@
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+
 module HigherOrderFunctionsExercises where
 
 import Data.Char (chr, ord)
 import Data.List (sort)
 import HigherOrderFunctions (unfold)
+
 -- Binary string transmitter
 type Bit = Int
 
@@ -25,22 +28,43 @@ int2Bin = unfold (== 0) (`mod` 2) (`div` 2)
 make8 :: [Bit] -> [Bit]
 make8 bits = take 8 (bits ++ repeat 0)
 
+parity :: [Bit] -> Int
+parity bits
+  | isOdd = 1
+  | otherwise = 0
+  where
+    isOdd = odd $ count 1 bits
+
+addParity :: [Bit] -> [Bit]
+addParity bits = bits ++ [pbit]
+  where
+    pbit = parity bits
+
 -- | Encodes a String into a list of bits
 encode :: String -> [Bit]
-encode = concatMap (make8 . int2Bin . ord)
+encode cs = addParity bits
+  where
+    bits = concatMap (make8 . int2Bin . ord) cs
 
 chop8 :: [Bit] -> [[Bit]]
-chop8 = unfold null (take 8) (drop 8)
 -- chop8 [] = []
 -- chop8 bits = take 8 bits : chop8 (drop 8 bits)
+chop8 = unfold null (take 8) (drop 8)
 
 -- | Decodes a list of bits into a String
 decode :: [Bit] -> String
-decode = map (chr . bin2Int) . chop8
+decode bits
+  | parityCheck = init . map (chr . bin2Int) $ chop8 bits
+  | otherwise = error "Parity bit is incorrect"
+  where
+    parityCheck = parity bits == last bits
 
--- | Simulates the transmission of a String as a list of bits using a perffect communication channel
+-- | Simulates the transmission of a String as a list of bits using a perfect communication channel
 transmit :: String -> String
 transmit = decode . channel . encode
+
+dchannel :: [a] -> [a]
+dchannel = tail
 
 channel :: a -> a
 channel = id
